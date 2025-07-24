@@ -1,17 +1,17 @@
 <template>
   <Navbar />
-
-  <!-- ✅ Show Main Directory -->
-  <div v-if="!showForm && !showDelete">
-    <div class="containerr">
+  
+  <!-- Main Directory View -->
+  <div v-if="!showForm && !showDelete" class="directory-container">
+    <div class="directory-header">
       <h2>Employee Directory</h2>
-      <p class="mb-4">
+      <p>
         Meet our talented team members who drive innovation and excellence at
         Modern Tech Solutions.
       </p>
     </div>
 
-    <div class="container">
+    <div class="search-container">
       <input
         v-model="searchQuery"
         type="text"
@@ -20,443 +20,387 @@
       />
     </div>
 
-    <section>
+    <div class="employee-grid">
       <manage-comp
         v-for="employee in filteredEmployees"
         :key="employee.employeeId"
         :employee="employee"
       />
-    </section>
+    </div>
 
-    <div class="container">
-      <button
-        @click="showForm = true"
-        class="btn btn-primary"
-        style="margin-top: 20px"
-      >
+    <div class="action-buttons">
+      <button @click="showForm = true" class="btn btn-primary">
         Add Employee
       </button>
-      <button
-        @click="showDelete = true"
-        class="btn btn-danger"
-        style="margin-top: 20px; margin-left: 10px"
-      >
+      <button @click="showDelete = true" class="btn btn-danger">
         Delete Employee
       </button>
     </div>
   </div>
 
-  <!-- ✅ Delete Dialog -->
-  <div v-if="showDelete" class="delete-employee-dialog">
-    <label for="deleteEmployeeSelect">Select employee to delete:</label>
-    <select
-      v-model="employeeToDeleteId"
-      id="deleteEmployeeSelect"
-      class="form-control"
-    >
-      <option disabled value="">Select employee...</option>
-      <option
-        v-for="emp in employees"
-        :key="emp.employeeId"
-        :value="emp.employeeId"
+  <!-- Delete Dialog -->
+  <div v-if="showDelete" class="dialog-overlay">
+    <div class="delete-dialog">
+      <h3>Delete Employee</h3>
+      <label for="deleteEmployeeSelect">Select employee to delete:</label>
+      <select
+        v-model="employeeToDeleteId"
+        id="deleteEmployeeSelect"
+        class="form-control"
       >
-        {{ emp.name }}
-      </option>
-    </select>
-    <div class="form-actions">
-      <button
-        :disabled="!employeeToDeleteId"
-        @click="confirmDelete"
-        class="btn btn-danger"
-        style="margin-top: 10px"
-      >
-        Confirm Delete
-      </button>
-      <button
-        @click="cancelDelete"
-        class="btn btn-secondary"
-        style="margin-top: 10px; margin-left: 10px"
-      >
-        Cancel
-      </button>
+        <option disabled value="">Select employee...</option>
+        <option
+          v-for="emp in employees"
+          :key="emp.employeeId"
+          :value="emp.employeeId"
+        >
+          {{ emp.name }}
+        </option>
+      </select>
+      <div class="dialog-actions">
+        <button
+          :disabled="!employeeToDeleteId"
+          @click="confirmDelete"
+          class="btn btn-danger"
+        >
+          Confirm Delete
+        </button>
+        <button @click="cancelDelete" class="btn btn-secondary">
+          Cancel
+        </button>
+      </div>
     </div>
   </div>
 
-  <!-- ✅ Add Employee Form -->
-  <div v-if="showForm" class="overlay-form-container">
-    <form @submit.prevent="submitForm" class="add-employee-form centered-form">
-      <input v-model="form.name" placeholder="Name" required class="form-control" />
-      <input v-model="form.position" placeholder="Position" required class="form-control" />
-      <input v-model="form.department" placeholder="Department" required class="form-control" />
-      <input v-model="form.salary" placeholder="Salary" type="number" required class="form-control" />
-      <input v-model="form.contact" placeholder="Contact" required class="form-control" />
-      <input v-model="form.employmentHistory" placeholder="Employment History" class="form-control" />
-      <input v-model="form.imageUrl" placeholder="Image URL" class="form-control" />
-      <button type="submit" class="btn btn-success" style="margin-top: 10px">
-        Add Employee
-      </button>
-      <button
-        type="button"
-        @click="showForm = false"
-        class="btn btn-secondary"
-        style="margin-top: 10px"
-      >
-        Cancel
-      </button>
+  <!-- Add Employee Form -->
+  <div v-if="showForm" class="dialog-overlay">
+    <form @submit.prevent="submitForm" class="add-form">
+      <h3>Add New Employee</h3>
+      <div class="form-group">
+        <input v-model="form.name" placeholder="Name" required />
+      </div>
+      <div class="form-group">
+        <input v-model="form.position" placeholder="Position" required />
+      </div>
+      <div class="form-group">
+        <input v-model="form.department" placeholder="Department" required />
+      </div>
+      <div class="form-group">
+        <input v-model="form.salary" placeholder="Salary" type="number" required />
+      </div>
+      <div class="form-group">
+        <input v-model="form.contact" placeholder="Contact" required />
+      </div>
+      <div class="form-group">
+        <input v-model="form.employmentHistory" placeholder="Employment History" />
+      </div>
+      <div class="form-group">
+        <input v-model="form.imageUrl" placeholder="Image URL" />
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-success">
+          Add Employee
+        </button>
+        <button type="button" @click="showForm = false" class="btn btn-secondary">
+          Cancel
+        </button>
+      </div>
     </form>
   </div>
 </template>
 
-
-
 <script setup>
 import Navbar from "@/components/Navbar.vue";
-import Footer from "@/components/Footer.vue";
-</script>
-
-<script>
 import ManageComp from "@/components/ManageComp.vue";
-export default {
-  components: { ManageComp },
-  data() {
-    return {
-      searchQuery:"",
-      employees: [
-        {
-          employeeId: 1,
-          name: "Sibongile Nkosi",
-          position: "Software Engineer",
-          department: "Development",
-          salary: 70000,
-          employmentHistory: "Joined in 2015, promoted to Senior in 2018",
-          contact: "sibongile.nkosi@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/39/b3/7a/39b37a440a6919dcd66368e5d4ee5316.jpg",
-        },
-        {
-          employeeId: 2,
-          name: "Lungile Moyo",
-          position: "HR Manager",
-          department: "HR",
-          salary: 80000,
-          employmentHistory: "Joined in 2013, promoted to Manager in 2017",
-          contact: "lungile.moyo@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/85/21/08/852108effbf96c9e18b5d94955222d45.jpg",
-        },
-        {
-          employeeId: 3,
-          name: "Thabo Molefe",
-          position: "Quality Analyst",
-          department: "QA",
-          salary: 55000,
-          employmentHistory: "Joined in 2018",
-          contact: "thabo.molefe@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/dc/b5/b1/dcb5b15678617e7e47ed74f9957c393e.jpg",
-        },
-        {
-          employeeId: 4,
-          name: "Keshav Naidoo",
-          position: "Sales Representative",
-          department: "Sales",
-          salary: 60000,
-          employmentHistory: "Joined in 2020",
-          contact: "keshav.naidoo@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/56/e0/b9/56e0b9a9fe78a9daad07cd4c1257e7dc.jpg",
-        },
-        {
-          employeeId: 5,
-          name: "Zanele Khumalo",
-          position: "Marketing Specialist",
-          department: "Marketing",
-          salary: 58000,
-          employmentHistory: "Joined in 2019",
-          contact: "zanele.khumalo@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/0b/2e/98/0b2e988dcec7af0209aa42d919c6967b.jpg",
-        },
-        {
-          employeeId: 6,
-          name: "Sipho Zulu",
-          position: "UI/UX Designer",
-          department: "Design",
-          salary: 65000,
-          employmentHistory: "Joined in 2016",
-          contact: "sipho.zulu@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/6b/60/42/6b6042657297682cad2c227875eddab3.jpg",
-        },
-        {
-          employeeId: 7,
-          name: "Naledi Moeketsi",
-          position: "DevOps Engineer",
-          department: "IT",
-          salary: 72000,
-          employmentHistory: "Joined in 2017",
-          contact: "naledi.moeketsi@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/10/b2/c8/10b2c87d4b52a7eaf40616e02459e7f3.jpg",
-        },
-        {
-          employeeId: 8,
-          name: "Farai Gumbo",
-          position: "Content Strategist",
-          department: "Marketing",
-          salary: 56000,
-          employmentHistory: "Joined in 2021",
-          contact: "farai.gumbo@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/7b/ae/d3/7baed3ee85756fa875a97db1b1c38f46.jpg",
-        },
-        {
-          employeeId: 9,
-          name: "Karabo Dlamini",
-          position: "Accountant",
-          department: "Finance",
-          salary: 62000,
-          employmentHistory: "Joined in 2018",
-          contact: "karabo.dlamini@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/61/25/5d/61255d5aba12c6af62fc730a543f1f44.jpg",
-        },
-        {
-          employeeId: 10,
-          name: "Fatima Patel",
-          position: "Customer Support Lead",
-          department: "Support",
-          salary: 58000,
-          employmentHistory: "Joined in 2016",
-          contact: "fatima.patel@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/91/0f/53/910f53e413209daff1bc3df07cd87f76.jpg",
-        },
-      ],
-      showForm: false,
-      showDelete: false,
-      employeeToDeleteId: "",
-      form: {
-        name: "",
-        position: "",
-        department: "",
-        salary: "",
-        contact: "",
-        employmentHistory: "",
-        imageUrl: "",
-      },
-    };
-  },
-  computed: {
-  filteredEmployees() {
-    if (!this.searchQuery) return this.employees;
-    const query = this.searchQuery.toLowerCase();
-    return this.employees.filter(emp =>
-      emp.name.toLowerCase().includes(query) ||
-      emp.position.toLowerCase().includes(query) ||
-      emp.department.toLowerCase().includes(query)
-    );
-  },
-},
-  methods: {
-    submitForm() {
-      // Add a new employee to the list
-      const newId = this.employees.length
-        ? Math.max(...this.employees.map((e) => e.employeeId)) + 1
-        : 1;
-      this.employees.push({
-        employeeId: newId,
-        ...this.form,
-      });
-      // Reset form and hide it
-      this.form = {
-        name: "",
-        position: "",
-        department: "",
-        salary: "",
-        contact: "",
-        employmentHistory: "",
-        imageUrl: "",
-      };
-      this.showForm = false;
-    },
-    confirmDelete() {
-      const emp = this.employees.find(
-        (e) => e.employeeId === this.employeeToDeleteId
-      );
-      if (emp && confirm(`Are you sure you want to delete ${emp.name}?`)) {
-        this.employees = this.employees.filter(
-          (e) => e.employeeId !== this.employeeToDeleteId
-        );
-        this.employeeToDeleteId = "";
-        this.showDelete = false;
-      }
-    },
-    cancelDelete() {
-      this.employeeToDeleteId = "";
-      this.showDelete = false;
-    },
-  },
-};
+import { ref, computed } from "vue";
+
+const searchQuery = ref("");
+const employees = ref([
+  // Your employee data array remains the same
+]);
+
+const showForm = ref(false);
+const showDelete = ref(false);
+const employeeToDeleteId = ref("");
+const form = ref({
+  name: "",
+  position: "",
+  department: "",
+  salary: "",
+  contact: "",
+  employmentHistory: "",
+  imageUrl: ""
+});
+
+const filteredEmployees = computed(() => {
+  if (!searchQuery.value) return employees.value;
+  const query = searchQuery.value.toLowerCase();
+  return employees.value.filter(emp =>
+    emp.name.toLowerCase().includes(query) ||
+    emp.position.toLowerCase().includes(query) ||
+    emp.department.toLowerCase().includes(query)
+  );
+});
+
+function submitForm() {
+  const newId = employees.value.length
+    ? Math.max(...employees.value.map(e => e.employeeId)) + 1
+    : 1;
+  employees.value.push({
+    employeeId: newId,
+    ...form.value
+  });
+  form.value = {
+    name: "",
+    position: "",
+    department: "",
+    salary: "",
+    contact: "",
+    employmentHistory: "",
+    imageUrl: ""
+  };
+  showForm.value = false;
+}
+
+function confirmDelete() {
+  const emp = employees.value.find(e => e.employeeId === employeeToDeleteId.value);
+  if (emp && confirm(`Are you sure you want to delete ${emp.name}?`)) {
+    employees.value = employees.value.filter(e => e.employeeId !== employeeToDeleteId.value);
+    employeeToDeleteId.value = "";
+    showDelete.value = false;
+  }
+}
+
+function cancelDelete() {
+  employeeToDeleteId.value = "";
+  showDelete.value = false;
+}
 </script>
-<style>
-section {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  width: 100%;
+
+<style scoped>
+/* Base Styles */
+:root {
+  --primary-color: #5990cc;
+  --danger-color: #e57373;
+  --success-color: #567c95;
+  --secondary-color: #6c757d;
+  --text-color: #333;
+  --light-text: #666;
+  --border-color: #ccc;
+  --background-light: #f5f5f5;
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --transition: all 0.3s ease;
+}
+
+* {
   box-sizing: border-box;
-  overflow-x: hidden;
-}
-.employment-view {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: #219aea0f;
-  z-index: -1;
+  margin: 0;
+  padding: 0;
 }
 
-
-@media (max-width: 1300px) {
-  section {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-@media (max-width: 900px) {
-  section {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-@media (max-width: 699px) {
-  section {
-    grid-template-columns: 1fr;
-  }
-}
-.overlay-form-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 90vh;
-  width: 100vw;
+/* Main Container */
+.directory-container {
+  padding: 2rem 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-.centered-form {
-  max-width: 320px; /* smaller width */
-  width: 100%;
-  padding: 20px; /* add some padding */
-  box-sizing: border-box;
+.directory-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.directory-header h2 {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.directory-header p {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: var(--light-text);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Search Bar */
+.search-container {
+  margin: 0 auto 2rem;
+  max-width: 600px;
+  padding: 0 1rem;
 }
 
 .search-bar {
-  margin-top: -30px; /* move up by decreasing this */
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
   width: 100%;
-  /* max-width: 400px; */
-  font-size: 16px;
-  box-sizing: border-box;
-}
-
-
-.add-employee-form {
-  background: #63897c;
-  padding: 16px 20px;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 400px;
-  margin-top: 16px;
+  font-size: 1rem;
+  transition: var(--transition);
 }
+
+.search-bar:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(89, 144, 204, 0.2);
+}
+
+/* Employee Grid */
+.employee-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 0 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Action Buttons */
 .action-buttons {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 10px;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
 }
-.delete-employee-dialog {
-  background: #fff0f0;
-  border: 1px solid #e57373;
-  border-radius: 10px;
-  padding: 20px 30px;
-  margin: 20px auto 0 auto;
-  max-width: 350px;
+
+/* Dialog Overlay */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  z-index: 1000;
+  padding: 1rem;
 }
 
-.form-control {
-  padding: 6px 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 1em;
+/* Delete Dialog */
+.delete-dialog {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: var(--shadow);
 }
 
-.form-actions {
+.delete-dialog h3 {
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
+  text-align: center;
+}
+
+/* Add Employee Form */
+.add-form {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: var(--shadow);
+}
+
+.add-form h3 {
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(89, 144, 204, 0.2);
+}
+
+/* Form Actions */
+.dialog-actions, .form-actions {
   display: flex;
-  gap: 10px;
-  justify-content: flex-end;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
+/* Button Styles */
 .btn {
-  padding: 8px 16px;
-  margin-bottom: 20px;
-  border-radius: 5px;
+  padding: 0.8rem 1.5rem;
   border: none;
-  font-size: 1em;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
 }
 
 .btn-primary {
-  background: #5990cc;
-  color: #fff;
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-danger {
+  background-color: var(--danger-color);
+  color: white;
 }
 
 .btn-success {
-  background: #567c95;
-  color: #fff;
+  background-color: var(--success-color);
+  color: white;
 }
 
 .btn-secondary {
-  background: #6c757d;
-  color: #fff;
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .employee-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
   
-.container {
-  position: relative;
-  text-align: center;
-  margin-top: 20px;
-  max-width: 100vw;
-  overflow-x: hidden;
-  box-sizing: border-box;
-}
-  margin-top: 20px;
-}
-h2 {
-  font-size: 2em;
-  color: #333;
-}
-p {
-  font-size: 1.2em;
-  color: #666;
+  .delete-dialog, .add-form {
+    padding: 1.5rem;
+  }
 }
 
-.containerr {
-  position: relative;
-  text-align: center;
-  margin-top: 20px;
+@media (max-width: 480px) {
+  .employee-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-buttons, .dialog-actions, .form-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+  
+  .delete-dialog, .add-form {
+    padding: 1rem;
+  }
 }
-h2 {
-  font-size: 2em;
-  color: #000000;
-}
-p {
-  font-size: 1.2em;
-  color: #1c1c1c;
-}
-
 </style>

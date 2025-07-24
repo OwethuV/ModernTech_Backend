@@ -47,4 +47,4 @@ const submitForm = () => {
     query: { ...form }
   })
 }
-</script>
+</script> 
