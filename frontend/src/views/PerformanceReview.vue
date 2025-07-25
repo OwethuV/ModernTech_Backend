@@ -18,12 +18,12 @@
         </thead>
         <tbody>
           <tr v-for="employee in employees" :key="employee.employeeId">
-            <td data-label="Employee">{{ employee.name }}</td>
-            <td data-label="Position">{{ employee.position }}</td>
-            <td data-label="Department">{{ employee.department }}</td>
-            <td data-label="Attendance">{{ getAttendance(employee) }}</td>
-            <td data-label="Productivity">{{ getProductivity(employee).toFixed(1) }}</td>
-            <td data-label="Total">{{ getTotal(employee).toFixed(1) }}</td>
+            <td>{{ employee.name }}</td>
+            <td>{{ employee.position }}</td>
+            <td>{{ employee.department }}</td>
+            <td>{{ getAttendance(employee) }}</td>
+            <td>{{ getProductivity(employee).toFixed(1) }}</td>
+            <td>{{ getTotal(employee).toFixed(1) }}</td>
           </tr>
         </tbody>
       </table>
@@ -32,14 +32,14 @@
   <Footer />
 </template>
 
+
 <script setup>
 import Navbar from '@/components/Navbar.vue'
 import { ref } from 'vue'
 import Footer from '@/components/Footer.vue'
 
-const employees = ref([
- 
-  {
+  const employees = ref([
+       {
             employeeId: 1,
             name: "Sibongile Nkosi",
             position: "Software Engineer",
@@ -140,163 +140,119 @@ const employees = ref([
             leaveDeductions: 4,
 
         }
-  
-])
 
-const getAttendance = (emp) => {
-  if(!emp.workingDays || emp.daysPresent === undefined) return 0
-  return Math.round((emp.daysPresent/ emp.workingDays) * 10) 
-}
-const getProductivity = (emp) => Math.min(10, emp.hoursWorked/17)
-const getTotal = (emp) => getAttendance(emp) + getProductivity(emp)
+
+        ])
+        const getAttendance = (emp) => {
+           if(!emp.workingDays || emp.daysPresent === undefined) return 0
+            return Math.round((emp.daysPresent/ emp.workingDays) * 10) 
+        }
+        const getProductivity = (emp) => Math.min(10, emp.hoursWorked/17)
+        const getTotal = (emp) => getAttendance(emp) + getProductivity(emp)
 </script>
 
 <style>
-:root {
-  --primary-color: #345678;
-  --secondary-color: #f0f3f6;
-  --text-color: #222;
-  --border-color: #dee2e6;
-  --white: #ffffff;
-}
 
 .Review {
   padding: 1rem;
-  max-width: 100vw;
-  overflow-x: hidden;
 }
 
-h1 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: var(--primary-color);
-  font-size: clamp(1.5rem, 4vw, 2rem);
-}
-
-/* Table container */
+/* Make table scrollable on small screens */
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  margin: 0 auto;
-  max-width: 100%;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  border-radius: 8px;
 }
 
-/* Table styles */
 .review-table {
   width: 100%;
-  border-collapse: collapse;
-  margin: 0 auto;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--white);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+  border-radius: 8px;
+  min-width: 600px; /* Table will scroll on narrow screens */
 }
 
 .review-table th,
 .review-table td {
   padding: 1rem;
   text-align: center;
-  border: 1px solid var(--border-color);
-  color: var(--text-color);
+  border: 1px solid #dee2e6;
+  background-color: #ffffff;
+  color: #222;
+  white-space: normal; /* Let text wrap */
+  word-break: break-word;
 }
 
 .review-table th {
-  background-color: var(--primary-color);
-  color: var(--white);
+  background-color: #345678;
+  color: #ffffff;
   font-weight: 600;
-  position: sticky;
-  top: 0;
 }
 
 /* Zebra striping */
 .review-table tr:nth-child(even) td {
-  background-color: var(--secondary-color);
+  background-color: #f0f3f6;
 }
 
-/* Responsive table - stack on small screens */
-@media (max-width: 768px) {
+/* Responsive font sizes */
+@media (max-width: 600px) {
   .review-table {
-    border: 0;
+    font-size: 12px;
   }
-
-  .review-table thead {
-    display: none;
-  }
-
-  .review-table tr {
-    display: block;
-    margin-bottom: 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-  }
-
-  .review-table td {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    text-align: right;
-    padding-left: 50%;
-    position: relative;
-    border-bottom: 1px solid var(--border-color);
-    border-right: 0;
-  }
-
-  .review-table td:last-child {
-    border-bottom: 0;
-  }
-
-  .review-table td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 1rem;
-    width: 45%;
-    padding-right: 1rem;
-    text-align: left;
-    font-weight: bold;
-    color: var(--primary-color);
+  .Review {
+    padding: 0.5rem;
   }
 }
 
-/* Medium screens */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 601px) and (max-width: 1024px) {
   .review-table {
     font-size: 14px;
   }
-  
-  .review-table th,
-  .review-table td {
-    padding: 0.8rem;
+  .Review {
+    padding: 1rem;
   }
 }
 
-/* Large screens */
 @media (min-width: 1025px) {
-  .table-wrapper {
-    max-width: 1200px;
-  }
-  
   .review-table {
     font-size: 16px;
   }
+  .Review {
+    padding: 2rem;
+  }
 }
 
-/* Print styles */
-@media print {
-  .review-table {
-    width: 100%;
-    font-size: 12pt;
-  }
-  
-  .review-table th {
-    background-color: var(--primary-color) !important;
-    color: var(--white) !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-  
-  .Navbar, .Footer {
-    display: none;
-  }
+
+/* Buttons styling */
+button {
+  padding: 0.7rem 1.5rem;
+  background-color: #345678;
+  color: #ffffff;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  margin-top: 1.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
 }
+
+button:hover {
+  background-color: #2b4564;
+}
+
+/* Ratings section styles */
+.ratings h2 {
+  color: #345678;
+}
+
+.ratings li {
+  color: #444;
+  font-size: 1.1rem;
+}
+
+
 </style>
