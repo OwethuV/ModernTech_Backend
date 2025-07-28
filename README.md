@@ -81,8 +81,6 @@ DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=your_mysql_password
 DB_NAME=moderntech_db
-JWT_SECRET=your_secret_key
-PORT=3000
 ```
 
 ### 5. Start servers
