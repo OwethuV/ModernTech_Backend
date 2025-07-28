@@ -89,7 +89,7 @@ PORT=3000
 Back-End (Node)
 ```bash
 cd backend
-npm run dev
+node --watch index.js
 ```
 Front-End (Vue)
 ```bash
