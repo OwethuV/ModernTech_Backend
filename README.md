@@ -57,8 +57,8 @@ Each table is normalized up to 3NF and uses foreign keys to maintain relational 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/moderntech-hr.git
-cd moderntech-hr
+git clone https://github.com/OwethuV/ModernTech_Solutions.git
+cd ModernTech_Solutions
 ```
 ### 2. Install back-end dependencies
 
