@@ -47,6 +47,7 @@ Key tables include:
 - `attendance`
 - `payroll`
 - `performance_review`
+- `leave_requests`
 
 Each table is normalized up to 3NF and uses foreign keys to maintain relational integrity.
 
