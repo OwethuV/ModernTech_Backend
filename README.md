@@ -81,6 +81,21 @@ cd ../backend
 npm install
 ```
 
+### 4. Import the Database
+Before running the system, you need to import the provided MySQL database:
+
+1. Open **phpMyAdmin**, **MySQL Workbench**, or any MySQL client.
+
+2. Create a new database named:
+```sql
+project2_
+```
+3. Import the provided SQL dump file
+   If you're using the terminal:
+```bash
+mysql -u root -p project2_ < 
+```
+
 ### 4. Configure .env for backend
 Create a .env file inside the /backend folder:
 ```env
