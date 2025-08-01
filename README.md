@@ -96,7 +96,7 @@ project2_
 mysql -u root -p project2_ < database.sql
 ```
 
-### 4. Configure .env for backend
+### 5. Configure .env for backend
 Create a .env file inside the /backend folder:
 ```env
 DB_HOST=localhost
@@ -105,7 +105,7 @@ DB_PASSWORD=your_mysql_password
 DB_NAME=moderntech_db
 ```
 
-### 5. Start servers
+### 6. Start servers
 Back-End (Node)
 ```bash
 cd backend
