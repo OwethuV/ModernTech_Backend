@@ -93,7 +93,7 @@ project2_
 3. Import the provided SQL dump file
    If you're using the terminal:
 ```bash
-mysql -u root -p project2_ < 
+mysql -u root -p project2_ < database.sql
 ```
 
 ### 4. Configure .env for backend
