@@ -59,12 +59,16 @@ Each table is normalized up to 3NF and uses foreign keys to maintain relational 
 
 ```bash
 git clone https://github.com/OwethuV/ModernTech_Solutions.git
+```
+```bash
 cd ModernTech_Solutions
 ```
 ### 2. Install back-end dependencies
 
 ```bash
 cd frontend
+```
+```bash
 npm install
 ```
 
@@ -72,6 +76,8 @@ npm install
 
 ```bash
 cd ../backend
+```
+```
 npm install
 ```
 
@@ -88,35 +94,32 @@ DB_NAME=moderntech_db
 Back-End (Node)
 ```bash
 cd backend
-node --watch index.js
+```
+```bash
+npm run dev
 ```
 Front-End (Vue)
 ```bash
 cd frontend
+```
+```bash
 npm run serve
 ```
 
-## API Endpoints
-| Method | Route                | Purpose                    |
-| ------ | -------------------- | -------------------------- |
-| POST   | /api/login           | User login                 |
-| GET    | /api/employees       | Get all employees          |
-| POST   | /api/attendance      | Submit attendance          |
-| GET    | /api/attendance/\:id | Get attendance by employee |
-| POST   | /api/payroll         | Calculate/store payroll    |
-
-All endpoints return JSON. Auth may be required for protected routes
+## Login Credentials
+- Email: `fatima.patel@moderntech.com` (Or any hr email in database)
+- Password: `fatima.patel@moderntech.com`
 
 ## Usage
-1. Log in with a registered user.
+1. Log in using provided credentials.
 
 2. View employees and performance records.
 
 3. Submit attendance or leave requests.
 
-4. View or generate payroll summaries.
+4. View payroll summaries.
 
-5. Admins can manage users and departments.
+5. Manage users and departments.
 
 ## Team
 - Aisha Kabanga
