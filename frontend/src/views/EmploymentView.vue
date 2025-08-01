@@ -56,12 +56,12 @@
     >
       <option disabled value="">Select employee...</option>
       <option
-        v-for="emp in employees"
-        :key="emp.employeeId"
-        :value="emp.employeeId"
-      >
-        {{ emp.name }}
-      </option>
+  v-for="emp in filteredEmployees"
+  :key="emp.employeeId"
+  :value="emp.employeeId"
+>
+  {{ emp.name }}
+</option>
     </select>
     <div class="form-actions">
       <button
@@ -86,12 +86,13 @@
   <div v-if="showForm" class="overlay-form-container">
     <form @submit.prevent="submitForm" class="add-employee-form centered-form">
       <input v-model="form.name" placeholder="Name" required class="form-control" />
-      <input v-model="form.position" placeholder="Position" required class="form-control" />
-      <input v-model="form.department" placeholder="Department" required class="form-control" />
-      <input v-model="form.salary" placeholder="Salary" type="number" required class="form-control" />
-      <input v-model="form.contact" placeholder="Contact" required class="form-control" />
-      <input v-model="form.employmentHistory" placeholder="Employment History" class="form-control" />
-      <input v-model="form.imageUrl" placeholder="Image URL" class="form-control" />
+<input v-model="form.position" placeholder="Position" required class="form-control" />
+<input v-model="form.department" placeholder="Department" required class="form-control" />
+<input v-model="form.salary" placeholder="Salary" type="number" required class="form-control" />
+<input v-model="form.email" placeholder="Email" required class="form-control" />
+<input v-model="form.phone_number" placeholder="Phone Number" required class="form-control" />
+<input v-model="form.hire_date" placeholder="Hire Date (YYYY-MM-DD)" required class="form-control" />
+<input v-model="form.imageUrl" placeholder="Image URL" class="form-control" />
       <button type="submit" class="btn btn-success" style="margin-top: 10px">
         Add Employee
       </button>
@@ -109,189 +110,76 @@
 
 
 
-<script setup>
-import Navbar from "@/components/Navbar.vue";
-import Footer from "@/components/Footer.vue";
-</script>
-
 <script>
 import ManageComp from "@/components/ManageComp.vue";
+import { mapGetters } from "vuex";
+import axios from 'axios';
+
 export default {
   components: { ManageComp },
   data() {
     return {
-      searchQuery:"",
-      employees: [
-        {
-          employeeId: 1,
-          name: "Sibongile Nkosi",
-          position: "Software Engineer",
-          department: "Development",
-          salary: 70000,
-          employmentHistory: "Joined in 2015, promoted to Senior in 2018",
-          contact: "sibongile.nkosi@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/39/b3/7a/39b37a440a6919dcd66368e5d4ee5316.jpg",
-        },
-        {
-          employeeId: 2,
-          name: "Lungile Moyo",
-          position: "HR Manager",
-          department: "HR",
-          salary: 80000,
-          employmentHistory: "Joined in 2013, promoted to Manager in 2017",
-          contact: "lungile.moyo@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/85/21/08/852108effbf96c9e18b5d94955222d45.jpg",
-        },
-        {
-          employeeId: 3,
-          name: "Thabo Molefe",
-          position: "Quality Analyst",
-          department: "QA",
-          salary: 55000,
-          employmentHistory: "Joined in 2018",
-          contact: "thabo.molefe@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/dc/b5/b1/dcb5b15678617e7e47ed74f9957c393e.jpg",
-        },
-        {
-          employeeId: 4,
-          name: "Keshav Naidoo",
-          position: "Sales Representative",
-          department: "Sales",
-          salary: 60000,
-          employmentHistory: "Joined in 2020",
-          contact: "keshav.naidoo@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/56/e0/b9/56e0b9a9fe78a9daad07cd4c1257e7dc.jpg",
-        },
-        {
-          employeeId: 5,
-          name: "Zanele Khumalo",
-          position: "Marketing Specialist",
-          department: "Marketing",
-          salary: 58000,
-          employmentHistory: "Joined in 2019",
-          contact: "zanele.khumalo@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/0b/2e/98/0b2e988dcec7af0209aa42d919c6967b.jpg",
-        },
-        {
-          employeeId: 6,
-          name: "Sipho Zulu",
-          position: "UI/UX Designer",
-          department: "Design",
-          salary: 65000,
-          employmentHistory: "Joined in 2016",
-          contact: "sipho.zulu@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/6b/60/42/6b6042657297682cad2c227875eddab3.jpg",
-        },
-        {
-          employeeId: 7,
-          name: "Naledi Moeketsi",
-          position: "DevOps Engineer",
-          department: "IT",
-          salary: 72000,
-          employmentHistory: "Joined in 2017",
-          contact: "naledi.moeketsi@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/10/b2/c8/10b2c87d4b52a7eaf40616e02459e7f3.jpg",
-        },
-        {
-          employeeId: 8,
-          name: "Farai Gumbo",
-          position: "Content Strategist",
-          department: "Marketing",
-          salary: 56000,
-          employmentHistory: "Joined in 2021",
-          contact: "farai.gumbo@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/7b/ae/d3/7baed3ee85756fa875a97db1b1c38f46.jpg",
-        },
-        {
-          employeeId: 9,
-          name: "Karabo Dlamini",
-          position: "Accountant",
-          department: "Finance",
-          salary: 62000,
-          employmentHistory: "Joined in 2018",
-          contact: "karabo.dlamini@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/61/25/5d/61255d5aba12c6af62fc730a543f1f44.jpg",
-        },
-        {
-          employeeId: 10,
-          name: "Fatima Patel",
-          position: "Customer Support Lead",
-          department: "Support",
-          salary: 58000,
-          employmentHistory: "Joined in 2016",
-          contact: "fatima.patel@moderntech.com",
-          imageUrl:
-            "https://i.pinimg.com/736x/91/0f/53/910f53e413209daff1bc3df07cd87f76.jpg",
-        },
-      ],
+      searchQuery: "",
       showForm: false,
       showDelete: false,
       employeeToDeleteId: "",
       form: {
         name: "",
-        position: "",
-        department: "",
-        salary: "",
-        contact: "",
-        employmentHistory: "",
-        imageUrl: "",
+      position: "",
+      department: "",
+      salary: "",
+      email: "",
+      phone_number: "",
+      hire_date: "",
+      imageUrl: "",
       },
     };
   },
   computed: {
-  filteredEmployees() {
-    if (!this.searchQuery) return this.employees;
-    const query = this.searchQuery.toLowerCase();
-    return this.employees.filter(emp =>
-      emp.name.toLowerCase().includes(query) ||
-      emp.position.toLowerCase().includes(query) ||
-      emp.department.toLowerCase().includes(query)
-    );
-  },
-},
-  methods: {
-    submitForm() {
-      // Add a new employee to the list
-      const newId = this.employees.length
-        ? Math.max(...this.employees.map((e) => e.employeeId)) + 1
-        : 1;
-      this.employees.push({
-        employeeId: newId,
-        ...this.form,
-      });
-      // Reset form and hide it
-      this.form = {
-        name: "",
-        position: "",
-        department: "",
-        salary: "",
-        contact: "",
-        employmentHistory: "",
-        imageUrl: "",
-      };
-      this.showForm = false;
-    },
-    confirmDelete() {
-      const emp = this.employees.find(
-        (e) => e.employeeId === this.employeeToDeleteId
+    ...mapGetters(["employeeInfo"]),
+    filteredEmployees() {
+      if (!this.searchQuery) return this.employeeInfo;
+      const query = this.searchQuery.toLowerCase();
+      return this.employeeInfo.filter(emp =>
+        emp.name.toLowerCase().includes(query) ||
+        emp.position.toLowerCase().includes(query) ||
+        emp.department.toLowerCase().includes(query)
       );
-      if (emp && confirm(`Are you sure you want to delete ${emp.name}?`)) {
-        this.employees = this.employees.filter(
-          (e) => e.employeeId !== this.employeeToDeleteId
-        );
-        this.employeeToDeleteId = "";
-        this.showDelete = false;
-      }
     },
+  },
+ mounted() {
+  this.$store.dispatch('getEmployeeInfo');
+},
+ methods: {
+  async submitForm() {
+  try {
+    await axios.post('http://localhost:9090/employee_information', this.form);
+    await this.$store.dispatch('getEmployeeInfo');
+    this.showForm = false;
+    this.form = {
+      name: "",
+      position: "",
+      department: "",
+      salary: "",
+      email: "",
+      phone_number: "",
+      hire_date: "",
+      imageUrl: "",
+    };
+  } catch (error) {
+    alert('Failed to add employee');
+  }
+},
+  async confirmDelete() {
+  try {
+    await axios.delete(`http://localhost:9090/employee_information/${this.employeeToDeleteId}`);
+    await this.$store.dispatch('getEmployeeInfo');
+    this.employeeToDeleteId = "";
+    this.showDelete = false;
+  } catch (error) {
+    alert('Failed to delete employee');
+  }
+},
     cancelDelete() {
       this.employeeToDeleteId = "";
       this.showDelete = false;
@@ -335,11 +223,28 @@ section {
   }
 }
 .overlay-form-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin-top: auto;
+  height: 100vh;
+  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 90vh;
-  width: 100vw;
+  z-index: 1000;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(5px);
+  overflow-y: auto; 
+}
+
+.add-employee-form.centered-form {
+  max-width: 350px;
+  min-width: 260px;
+  width: 100%;
+  padding: 18px 16px;
+  margin-top: 0;
+  overflow-y: auto; 
 }
 
 .centered-form {
@@ -350,7 +255,7 @@ section {
 }
 
 .search-bar {
-  margin-top: -30px; /* move up by decreasing this */
+  margin-top: 20px; /* move up by decreasing this */
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -371,6 +276,7 @@ section {
   gap: 10px;
   min-width: 400px;
   margin-top: 16px;
+  width: 100%;
 }
 .action-buttons {
   display: flex;
@@ -425,7 +331,7 @@ section {
 .btn-secondary {
   background: #6c757d;
   color: #fff;
-  
+}
 .container {
   position: relative;
   text-align: center;
@@ -433,8 +339,6 @@ section {
   max-width: 100vw;
   overflow-x: hidden;
   box-sizing: border-box;
-}
-  margin-top: 20px;
 }
 h2 {
   font-size: 2em;

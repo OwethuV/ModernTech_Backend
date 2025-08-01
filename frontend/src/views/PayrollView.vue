@@ -56,26 +56,36 @@ export default {
     };
   },
   methods: {
-    viewPayslip(employee) {
-      this.selectedEmployee = employee;
+  async viewPayslip(employee) {
+    console.log("Selected employee:", employee); // 👈 ADD THIS LINE
+    try {
+      const res = await fetch(`http://localhost:9090/payroll/${employee.employeeId}`);
+      const data = await res.json();
+
+      this.selectedEmployee = {
+        ...employee, // base info
+        ...data      // overwrite/add payroll info
+      };
 
       this.$nextTick(() => {
         const section = this.$refs.payslipSection;
         if (section && typeof section.scrollIntoView === "function") {
           section.scrollIntoView({ behavior: "smooth" });
-        } else {
-          console.warn("Payslip section not found or not ready for scrolling.");
         }
       });
-    },
+    } catch (err) {
+      console.error("Failed to fetch payslip data", err);
+    }
   },
+},
   mounted() {
-    fetch("http://localhost:8080/payroll_data.json")
-      .then((res) => res.json())
-      .then((data) => {
-        this.payrollData = data.payrollData;
-      });
-  },
+  fetch("http://localhost:9090/payroll")
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("Payroll Data Fetched:", data); // ✅ Add this
+      this.payrollData = data;
+    });
+},
 };
 </script>
 <style>

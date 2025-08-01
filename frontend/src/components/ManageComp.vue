@@ -2,15 +2,16 @@
   <div class="flip-card">
     <div class="flip-card-inner">
       <div class="flip-card-front">
-        <img :src="employee?.imageUrl" alt="" class="employee-image" />
-        <h2>{{ employee?.name }}</h2>
+<img :src="employee.imageUrl || `https://ui-avatars.com/api/?name=${employee.name}`" alt="" class="employee-image" />        <h2>{{ employee.name }}</h2>
       </div>
       <div class="flip-card-back">
-        <h3>Position: {{ employee?.position }}</h3>
-        <p>Department: {{ employee?.department }}</p>
-        <p>Salary: R{{ employee?.salary }}</p>
-        <p>Contact: {{ employee?.contact }}</p>
-        <p>Employment History: {{ employee?.employmentHistory }}</p>
+        <h3>Position: {{ employee.position }}</h3>
+        <p>Department: {{ employee.department }}</p>
+        <p>Salary: R{{ employee.salary }}</p>
+        <p>Email: {{ employee.email }}</p>
+        <p>Contact Number: {{ employee.phone_number }}</p>
+        <p>Hire Date: {{ new Date(employee.hire_date).toLocaleDateString() }}</p>
+        <p v-if="employee.employmentHistory">Employment History: {{ employee.employmentHistory }}</p>
       </div>
     </div>
   </div>

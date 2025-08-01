@@ -6,7 +6,7 @@
       @delete-employee="handleDeleteEmployee"
       @update-employee="handleUpdateEmployee"
     />
-    <Footer />
+    <Footer/>
   </div>
 </template>
 

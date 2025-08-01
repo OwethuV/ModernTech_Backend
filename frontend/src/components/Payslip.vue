@@ -1,34 +1,55 @@
 <template>
   <div v-if="employee" class="payslip-container">
     <h3>
-      Payslip for {{ employee.name }} (Employee {{ employee.employeeId }})
+      Payslip for {{ employee.name }} (Employee {{ employee.Employee_Information_ID }})
     </h3>
     <ul>
-      <li><strong>Hours Worked: </strong>{{ employee.hoursWorked }}</li>
-      <li><strong>Leave Deductions: </strong>{{ employee.leaveDeductions }}</li>
-      <li><strong>Final Salary: </strong>{{ employee.finalSalary }}</li>
-      <li><strong>Estimated Annual Income: </strong>{{ annualIncome }}</li>
+      <li><strong>Hours Worked: </strong>{{ employee.hours_worked }}</li>
+      <li><strong>Leave Deductions: </strong>{{ employee.leave_deductions }}</li>
+      <li><strong>Final Salary: </strong>{{ employee.final_salary }}</li>
+      <li><strong>Estimated Annual Income: </strong>{{ employee.estimated_annual_income }}</li>
     </ul>
   </div>
-  <h3></h3>
 </template>
+   
 
 <script>
+import { ref, onMounted, computed } from "vue";
+
+
 export default {
   name: "Payslip",
   props: {
     employee: {
       type: Object,
-      require: true,
+      required: true,
     },
   },
-  computed: {
-    annualIncome() {
-      return this.employee.finalSalary * 12;
-    },
+  setup(props) {
+    const payroll = ref(null);
+
+    onMounted(async () => {
+      try {
+        const res = await fetch(`http://localhost:9090/payroll/${props.employee.employeeId}`);
+        const data = await res.json();
+        payroll.value = data;
+        console.log("Fetched payroll:", data);
+      } catch (err) {
+        console.error("Fetch error:", err);
+      }
+    });
+
+    return {
+      payroll,
+      annualIncome: computed(() => {
+        return payroll.value ? payroll.value.finalSalary * 12 : 0;
+      }),
+    };
   },
 };
 </script>
+
+
 <style>
 .payslip-container {
   max-width: 600px;
@@ -62,15 +83,10 @@ export default {
   border-radius: 6px;
 }
 
-.payslip-container strong {
-  display: inline-block;
-  width: 180px;
-  color: #34495e;
-}
-
 h1 h2 h3 h4 {
   color: #2199ea !important;
   text-align: center;
   margin-bottom: 30px;
 }
 </style>
+
